@@ -95,12 +95,14 @@ def get_random_pipes(xpos): # to generate pipes in random sizes
     pipe_inverted = Pipe(True, xpos, SCREEN_HEIGHT - size - PIPE_GAP)
     return (pipe, pipe_inverted) # will return random pipes in 2 different position
 
+#function to count the points after passing pipes
 def info():
     global points, record
 
     if points > record:
         record = points
 
+# function to start the game
 def start_the_game():
     menu = True
     pygame.init()
@@ -110,7 +112,7 @@ def start_the_game():
     mixer.music.load('game.wav')
     mixer.music.play(-1)    
     
-
+    # background image
     BACKGROUND = pygame.image.load('background-day.png')
     BACKGROUND = pygame.transform.scale(BACKGROUND, (
     SCREEN_WIDTH, SCREEN_HEIGHT))  # it transforms the size of the background image to the same size as the screen
@@ -131,7 +133,7 @@ def start_the_game():
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
 
-    clock = pygame.time.Clock()  # FPS do jogo
+    clock = pygame.time.Clock()  # Frames Per Second
 
     global points, record
     points = 0
@@ -146,19 +148,26 @@ def start_the_game():
                 if event.button == 1:
                     screen.blit(BACKGROUND, (0, 0))
                     ground_group.draw(screen)
+                    pygame.display.update()
                     sleep(0.3)
                     screen.blit(font.render('3', True, (255, 255, 255)), (400, 250))
+                    pygame.display.update()
                     sleep(1)
                     screen.blit(BACKGROUND, (0, 0))
                     ground_group.draw(screen)
+                    pygame.display.update()
                     screen.blit(font.render('2', True, (255, 255, 255)), (400, 250))
+                    pygame.display.update()
                     sleep(1)
                     screen.blit(BACKGROUND, (0, 0))
                     ground_group.draw(screen)
+                    pygame.display.update()
                     screen.blit(font.render('1', True, (255, 255, 255)), (400, 250))
+                    pygame.display.update()
                     sleep(1)
                     screen.blit(BACKGROUND, (0, 0))
                     ground_group.draw(screen)
+                    pygame.display.update()
                     menu = False
 
             if event.type == KEYDOWN and menu == False:
@@ -170,6 +179,7 @@ def start_the_game():
                     (0, 0))  # takes the surface of the background and draws on the screen from the position (x, y)
 
         if menu == True:
+            # write the message on the first screen
             font = pygame.font.SysFont(pygame.font.get_default_font(), 60)
             ground_group.draw(screen)
             txt = font.render("CLICK TO START", True, (255,255,255))
@@ -199,17 +209,17 @@ def start_the_game():
             ground_group.update()
             pipe_group.update()
             
-
             bird_group.draw(screen)
             ground_group.draw(screen)
             pipe_group.draw(screen)
             
             font = pygame.font.SysFont(pygame.font.get_default_font(), 80)
             if (pygame.sprite.groupcollide(bird_group, ground_group, False, False, pygame.sprite.collide_mask) or
-                    pygame.sprite.groupcollide(bird_group, pipe_group, False, False, pygame.sprite.collide_mask)):
+                    pygame.sprite.groupcollide(bird_group, pipe_group, False, False, pygame.sprite.collide_mask)):# "mask" makes that only the pixels that have any color in the bird collide with the pixels of the floor or pipe
+                # hit sound
                 hit_sound = mixer.Sound('hit.wav')
                 hit_sound.play()
-                
+                # creates the box at the end   
                 font1 = pygame.font.SysFont("arial", 33)
                 pygame.draw.rect(screen, 0x543847, [305, 104, 200, 200 ], 10)
                 pygame.draw.rect(screen, 0xDED895, [310, 108, 190, 190])
@@ -228,12 +238,9 @@ def start_the_game():
                 sleep(5)
                 start_the_game()
             else:
+                # creates the points on the screen during the game
                 txt = font.render(str(points), 0, (255, 255, 255))
                 screen.blit(txt, (380, 146))
-        pygame.display.update()
-
-                
-                # "mask" makes that only the pixels that have any color in the bird collide with the pixels of the floor or pipe
-                
+        pygame.display.update()         
 
 start_the_game()
